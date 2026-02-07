@@ -5,10 +5,10 @@ import { cn } from "@/shared/utilts";
 import { useState, ChangeEvent, KeyboardEventHandler } from "react";
 
 export type CellProps = {
-  value: number; // 0 = empty
+  value: number | null;
   solution: number;
   location: CellCoordinates;
-  onChangeValue: (location: CellCoordinates, value: number) => void;
+  onChangeValue: (location: CellCoordinates, value: number | null) => void;
   isStatic?: boolean;
 };
 
@@ -27,7 +27,7 @@ export function Cell({
 
     switch (e.key) {
       case "Backspace":
-        onChangeValue(location, 0);
+        onChangeValue(location, null);
       default:
         const num = parseInt(e.key);
 
@@ -41,7 +41,8 @@ export function Cell({
   return (
     <div
       className={cn(
-        "size-full text-white relative grid content-stretch bg-black border-3 border-transparent",
+        "size-full text-white relative grid content-stretch bg-black border-3 border-white/30",
+        isStatic && "border-white/10",
         (rowId === 2 || rowId === 5) && "border-b-white",
         (colId === 2 || colId === 5) && "border-r-white",
       )}
@@ -50,19 +51,13 @@ export function Cell({
         onKeyDown={handleChange}
         tabIndex={isStatic ? -1 : 1}
         className={cn(
-          "outline-none select-none focus:bg-emerald-800 self-center text-center text-3xl justify-center aspect-square size-full items-center flex",
-          isStatic && "pointer-events-none",
+          "outline-none select-none focus:bg-emerald-800 self-center text-center text-3xl justify-center aspect-square size-full items-center flex bg-white/30",
+          isStatic && "pointer-events-none bg-white/10",
         )}
       >
         {value || ""}
       </div>
-      {/*<input
-        className="self-center text-center size-full text-3xl justify-center aspect-square"
-        value={value || ""} // handle 0
-        onChange={handleChange}
-      />
-*/}
-      {value != 0 ? null : (
+      {value ? null : (
         <>
           <div className="self-center text-center">{candidates}</div>
           <div className="absolute">{clues}</div>
