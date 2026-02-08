@@ -5,11 +5,11 @@ import { sudokus } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 
 export async function fetchSudokus({
-  offset,
-  limit,
+  offset = 0,
+  limit = 25,
 }: {
-  offset: number;
-  limit: number;
+  offset?: number;
+  limit?: number;
 }) {
   // return await db.select().from(sudokus).offset(offset).limit(limit);
   return await db.query.sudokus.findMany({

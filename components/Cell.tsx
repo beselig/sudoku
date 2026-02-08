@@ -1,22 +1,26 @@
 "use client";
 
-import { CellCoordinates } from "@/shared/types";
+import { Coordinates } from "@/shared/types";
 import { cn } from "@/shared/utilts";
-import { useState, ChangeEvent, KeyboardEventHandler } from "react";
+import { useState, KeyboardEventHandler } from "react";
 
 export type CellProps = {
   value: number | null;
   solution: number;
-  location: CellCoordinates;
-  onChangeValue: (location: CellCoordinates, value: number | null) => void;
+  coordinates: Coordinates;
+  onChangeValue: (location: Coordinates, value: number | null) => void;
   isStatic?: boolean;
+  preview?: boolean;
+  isValid?: boolean;
 };
 
 export function Cell({
   value,
   onChangeValue,
-  location,
+  coordinates: location,
   isStatic = false,
+  preview = false,
+  isValid = true,
 }: CellProps) {
   const [candidates] = useState([]);
   const [clues] = useState([]);
@@ -41,7 +45,8 @@ export function Cell({
   return (
     <div
       className={cn(
-        "size-full text-white relative grid content-stretch bg-black border-3 border-white/30",
+        "size-full text-white relative grid content-stretch bg-black border border-white/30",
+        !value || isValid || "bg-red-500",
         isStatic && "border-white/10",
         (rowId === 2 || rowId === 5) && "border-b-white",
         (colId === 2 || colId === 5) && "border-r-white",
@@ -51,8 +56,9 @@ export function Cell({
         onKeyDown={handleChange}
         tabIndex={isStatic ? -1 : 1}
         className={cn(
-          "outline-none select-none focus:bg-emerald-800 self-center text-center text-3xl justify-center aspect-square size-full items-center flex bg-white/30",
-          isStatic && "pointer-events-none bg-white/10",
+          "outline-none select-none focus:bg-emerald-800 self-center text-center @xs:text-base @sm:text-xl @md:text-2xl @lg:text-3xl @xl:text-4xl @2xl:text-5xl @4xl:text-6xl justify-center aspect-square size-full items-center flex bg-white/30",
+          isStatic || (preview && "pointer-events-none "),
+          isStatic && "bg-white/10",
         )}
       >
         {value || ""}

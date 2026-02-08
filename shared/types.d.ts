@@ -1,2 +1,3 @@
-export type GameState = (number | null)[][];
-export type CellCoordinates = [number, number]; // GameState[row][col]
+export type BoardValidityState = boolean[][];
+export type BoardState = (number | null)[][];
+export type Coordinates = [number, number]; // GameState[row][col]
