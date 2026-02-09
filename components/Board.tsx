@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import { Cell } from "./Cell";
 import { cn } from "@/shared/utilts";
 import { getBoardValidityState } from "@/shared/validate";
+import { useAtom, useSetAtom } from "jotai";
+import { activeCellAtom } from "@/shared/atoms";
 
 export function Board({
   sudoku,
@@ -21,6 +23,7 @@ export function Board({
   const [gameState, setGameState] = useState<BoardState>(sudoku.puzzle);
   const [boardValidityState, setBoardValidityState] =
     useState<BoardValidityMap>(getBoardValidityState(gameState));
+  const [activeCell, setActiveCell] = useAtom(activeCellAtom);
 
   useEffect(() => {
     setBoardValidityState(getBoardValidityState(gameState));
@@ -40,7 +43,7 @@ export function Board({
   }
 
   return (
-    <section className="w-full @container">
+    <section className="w-full @container max-w-4xl">
       <div
         className={cn(
           preview || "min-w-sm",
