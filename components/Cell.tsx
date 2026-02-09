@@ -1,14 +1,16 @@
 "use client";
 
+import { highlightedValueAtom } from "@/shared/atoms";
 import { Coordinates } from "@/shared/types";
 import { cn } from "@/shared/utilts";
-import { useState, KeyboardEventHandler } from "react";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { KeyboardEventHandler, useEffect, useState } from "react";
 
 export type CellProps = {
   value: number | null;
   solution: number;
   coordinates: Coordinates;
-  onChangeValue: (location: Coordinates, value: number | null) => void;
+  changeValue: (location: Coordinates, value: number | null) => void;
   isStatic?: boolean;
   preview?: boolean;
   isValid?: boolean;
@@ -16,7 +18,7 @@ export type CellProps = {
 
 export function Cell({
   value,
-  onChangeValue,
+  changeValue: onChangeValue,
   coordinates: location,
   isStatic = false,
   preview = false,
@@ -25,6 +27,14 @@ export function Cell({
   const [candidates] = useState([]);
   const [clues] = useState([]);
   const [rowId, colId] = location;
+  const [highlightedValue, setHighlightedValue] = useAtom(highlightedValueAtom);
+
+  function onFocus() {
+    setHighlightedValue(value);
+  }
+  function onBlur() {
+    setHighlightedValue(null);
+  }
 
   const handleChange: KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (isStatic) return;
@@ -47,12 +57,15 @@ export function Cell({
       className={cn(
         "size-full text-white relative grid content-stretch bg-black border border-white/30",
         !value || isValid || "bg-red-500",
+        highlightedValue && highlightedValue === value && "bg-emerald-300",
         isStatic && "border-white/10",
         (rowId === 2 || rowId === 5) && "border-b-white",
         (colId === 2 || colId === 5) && "border-r-white",
       )}
     >
       <div
+        onFocus={onFocus}
+        onBlur={onBlur}
         onKeyDown={handleChange}
         tabIndex={isStatic ? -1 : 1}
         className={cn(

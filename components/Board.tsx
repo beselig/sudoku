@@ -56,7 +56,7 @@ export function Board({
                 key={`${rowId}-${colId}`}
                 value={col}
                 coordinates={coordinates}
-                onChangeValue={onChangeValue}
+                changeValue={onChangeValue}
                 isStatic={!!sudoku.puzzle[rowId][colId]}
                 preview={preview}
                 isValid={boardValidityState[rowId][colId]}
