@@ -8,7 +8,6 @@ import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
 
 export type CellProps = {
   value: number | null;
-  solution: number;
   coordinates: Coordinates;
   valueChangeAction: (location: Coordinates, value: number | null) => void;
   isStatic?: boolean;

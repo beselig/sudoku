@@ -1,28 +1,25 @@
-import { Coordinates, GameState, BoardValidityState } from "./types";
+import { GameState, BoardValidityState, Coordinates } from "./types";
 
-// validates Cell, null values are considered invalid
 export function getBoardValidityState(state: GameState) {
-  const validGrid: BoardValidityState = Array.from({ length: 9 }, () =>
-    Array(9).fill(true),
-  );
+  const invalidFields: Coordinates[] = [];
 
   for (let rowIndex = 0; rowIndex < 9; rowIndex++) {
     for (let colIndex = 0; colIndex < 9; colIndex++) {
       const cellValue = state[rowIndex][colIndex];
       if (cellValue === null) {
-        validGrid[rowIndex][colIndex] = false;
+        invalidFields.push([rowIndex, colIndex]);
         continue;
       }
 
       const rowIsValid = validateRow(rowIndex, state, cellValue);
       if (!rowIsValid) {
-        validGrid[rowIndex][colIndex] = false;
+        invalidFields.push([rowIndex, colIndex]);
         continue;
       }
 
       const colIsValid = validateCol(colIndex, state, cellValue);
       if (!colIsValid) {
-        validGrid[rowIndex][colIndex] = false;
+        invalidFields.push([rowIndex, colIndex]);
         continue;
       }
 
@@ -32,15 +29,13 @@ export function getBoardValidityState(state: GameState) {
         cellValue,
       );
       if (!boxIsValid) {
-        validGrid[rowIndex][colIndex] = false;
+        invalidFields.push([rowIndex, colIndex]);
         continue;
       }
-
-      validGrid[rowIndex][colIndex] = true;
     }
   }
 
-  return validGrid;
+  return invalidFields;
 }
 
 function validateRow(index: number, state: GameState, cellValue: number) {
@@ -84,8 +79,6 @@ const validateCellAgainstBox = (
       }
     }
   }
-
-  // console.log(cellValue, valueMatches, "for", rowId, colId);
 
   return valueMatches === 1;
 };

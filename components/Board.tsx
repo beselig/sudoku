@@ -2,45 +2,26 @@
 
 import { sudokus } from "@/lib/schema";
 import { activeCellAtom } from "@/shared/atoms";
-import {
-  BoardState,
-  BoardValidityState as BoardValidityMap,
-  Coordinates,
-} from "@/shared/types";
+import { GameState, Coordinates, BoardValidityState } from "@/shared/types";
 import { cn } from "@/shared/utilts";
-import { getBoardValidityState } from "@/shared/validate";
 import { useAtom } from "jotai";
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent } from "react";
 import { Cell } from "./Cell";
 
 export function Board({
-  sudoku,
+  puzzle,
+  gameState,
+  boardValidityState,
   preview = false,
+  cellUpdateAction,
 }: {
-  sudoku: typeof sudokus.$inferSelect;
+  puzzle: typeof sudokus.$inferSelect.puzzle;
+  boardValidityState: BoardValidityState;
+  gameState: GameState;
   preview?: boolean;
+  cellUpdateAction: (location: Coordinates, value: number | null) => void;
 }) {
-  const [gameState, setGameState] = useState<BoardState>(sudoku.puzzle);
-  const [boardValidityState, setBoardValidityState] =
-    useState<BoardValidityMap>(getBoardValidityState(gameState));
   const [activeCell, setActiveCell] = useAtom(activeCellAtom);
-
-  useEffect(() => {
-    setBoardValidityState(getBoardValidityState(gameState));
-  }, [gameState]);
-
-  function onChangeValue([rowId, colId]: Coordinates, value: number | null) {
-    setGameState(
-      gameState.map((row, rowIndex) => {
-        return row.map((col, colIndex) => {
-          if (rowIndex === rowId && colIndex === colId) {
-            return value;
-          }
-          return col;
-        });
-      }),
-    );
-  }
 
   function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     if (!e.key.includes("Arrow") || !activeCell) return;
@@ -87,12 +68,11 @@ export function Board({
         {gameState.map((row, rowId) =>
           row.map((col, colId) => (
             <Cell
-              solution={sudoku.solution[rowId][colId]}
               key={`${rowId}-${colId}`}
               value={col}
               coordinates={[rowId, colId]}
-              valueChangeAction={onChangeValue}
-              isStatic={!!sudoku.puzzle[rowId][colId]}
+              valueChangeAction={cellUpdateAction}
+              isStatic={!!puzzle[rowId][colId]}
               preview={preview}
               isValid={boardValidityState[rowId][colId]}
               isActive={activeCell?.[0] === rowId && activeCell?.[1] === colId}

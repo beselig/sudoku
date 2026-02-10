@@ -1,6 +1,6 @@
 "use server";
 
-import { Board } from "@/components/Board";
+import { GameClient } from "@/components/GameClient";
 import { fetchSudoku } from "@/server/sudokus";
 import { redirect } from "next/navigation";
 
@@ -21,7 +21,7 @@ export default async function Game({
     <div>
       <main className="min-h-screen py-32 px-14">
         <h1 className="text-3xl my-4">{sudoku.id}</h1>
-        {sudoku ? <Board sudoku={sudoku} /> : null}
+        <GameClient sudoku={sudoku} />
       </main>
     </div>
   );
