@@ -1,5 +1,4 @@
-import { SudokuCellList } from "@/components/SudokuCellList";
-import { SudokuGrid } from "@/components/SudokuGrid";
+import { SudokuPreview } from "@/components/SudokuPreview";
 import { fetchSudokus } from "@/server/sudokus";
 import Link from "next/link";
 
@@ -14,13 +13,7 @@ export default async function Home() {
           {sudokus.map((sudoku) => (
             <div key={sudoku.id} className="w-full">
               <Link href={`/game/${sudoku.id}`}>
-                <SudokuGrid>
-                  <SudokuCellList
-                    grid={sudoku.puzzle}
-                    puzzle={sudoku.puzzle}
-                    preview={true}
-                  />
-                </SudokuGrid>
+                <SudokuPreview sudoku={sudoku} />
               </Link>
             </div>
           ))}

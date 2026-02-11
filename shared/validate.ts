@@ -1,10 +1,12 @@
 import { Coordinates, GameState, BoardValidityState } from "./types";
 
 // validates Cell, null values are considered invalid
-export function getBoardValidityState(state: GameState) {
+export function getBoardValidityState(state?: GameState | null) {
   const validGrid: BoardValidityState = Array.from({ length: 9 }, () =>
     Array(9).fill(true),
   );
+
+  if (!state) return validGrid;
 
   for (let rowIndex = 0; rowIndex < 9; rowIndex++) {
     for (let colIndex = 0; colIndex < 9; colIndex++) {

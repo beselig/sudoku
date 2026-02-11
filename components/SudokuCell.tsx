@@ -3,10 +3,11 @@
 import { activeCellAtom, currentActiveValueAtom } from "@/shared/atoms";
 import { Coordinates } from "@/shared/types";
 import { cn } from "@/shared/utilts";
+import { useSetAtom } from "jotai";
 import { useAtom } from "jotai";
 import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
 
-export type CellProps = {
+export type SudokuCellProps = {
   value: number | null;
   coordinates: Coordinates;
   valueChangeAction?: (location: Coordinates, value: number | null) => void;
@@ -16,7 +17,7 @@ export type CellProps = {
   isActive?: boolean;
 };
 
-export function Cell({
+export function SudokuCell({
   value,
   valueChangeAction,
   coordinates,
@@ -24,14 +25,14 @@ export function Cell({
   preview = false,
   isValid = true,
   isActive = false,
-}: CellProps) {
+}: SudokuCellProps) {
   const [candidates] = useState([]);
   const [clues] = useState([]);
   const [rowId, colId] = coordinates;
   const [currentActiveValue, setCurrentActiveValue] = useAtom(
     currentActiveValueAtom,
   );
-  const [activeCell, setActiveCell] = useAtom(activeCellAtom);
+  const setActiveCell = useSetAtom(activeCellAtom);
   const el = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -48,22 +49,14 @@ export function Cell({
     setCurrentActiveValue(null);
   }
 
-  useEffect(() => {
-    if (activeCell?.toString() === coordinates.toString()) {
-      el.current?.focus();
-    }
-  }, [activeCell]);
-
   const handleChange: KeyboardEventHandler<HTMLDivElement> = (e) => {
     if (isStatic || !valueChangeAction) return;
 
     switch (e.key) {
       case "Backspace":
         valueChangeAction(coordinates, null);
-
       default:
         const num = parseInt(e.key);
-
         if (Number.isNaN(num)) {
           break;
         }
@@ -81,7 +74,11 @@ export function Cell({
         "size-full text-white relative grid content-stretch bg-black border border-white/30",
         !value || isValid || "bg-red-500",
         isStatic && "border-white/10",
-        currentActiveValue && currentActiveValue === value && "bg-emerald-900",
+        preview
+          ? "pointer-events-none"
+          : currentActiveValue && currentActiveValue === value
+            ? "bg-emerald-900"
+            : null,
         (rowId === 2 || rowId === 5) && "border-b-white",
         (colId === 2 || colId === 5) && "border-r-white",
       )}
@@ -95,7 +92,6 @@ export function Cell({
         className={cn(
           "outline-none select-none focus:bg-cyan-600 self-center text-center @xs:text-base @sm:text-xl @md:text-2xl @lg:text-3xl @xl:text-4xl @2xl:text-5xl @4xl:text-6xl justify-center aspect-square size-full items-center flex bg-white/30",
           isStatic && "bg-white/10",
-          preview && "pointer-events-none ",
         )}
       >
         {value || ""}

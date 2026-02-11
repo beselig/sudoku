@@ -5,11 +5,11 @@ import { sudokus } from "@/lib/schema";
 import { SudokuCellList } from "./SudokuCellList";
 import { SudokuGrid } from "./SudokuGrid";
 
-export function GameClient({
-  sudoku,
-}: {
+export type SudokuGameClientProps = {
   sudoku: typeof sudokus.$inferSelect;
-}) {
+};
+
+export function SudokuGameClient({ sudoku }: SudokuGameClientProps) {
   const {
     gameState,
     boardValidityState,

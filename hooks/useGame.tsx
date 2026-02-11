@@ -28,6 +28,14 @@ export function useGame(sudoku: typeof sudokus.$inferSelect) {
     setBoardValidityState(getBoardValidityState(gameState));
   }, [gameState]);
 
+  useEffect(() => {
+    return () => {
+      console.log("reset");
+      setActiveCell(null);
+      setBoardValidityState(null);
+    };
+  }, []);
+
   function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     if (!e.key.includes("Arrow") || !activeCell) return;
 
