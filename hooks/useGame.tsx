@@ -1,12 +1,15 @@
 import { sudokus } from "@/lib/schema";
+import { activeCellAtom } from "@/shared/atoms";
 import { GameState, Coordinates, BoardValidityState } from "@/shared/types";
 import { getBoardValidityState } from "@/shared/validate";
-import { useEffect, useState } from "react";
+import { useAtom } from "jotai";
+import { KeyboardEvent, useEffect, useState } from "react";
 
 export function useGame(sudoku: typeof sudokus.$inferSelect) {
   const [gameState, setGameState] = useState<GameState>(sudoku.puzzle);
   const [boardValidityState, setBoardValidityState] =
     useState<BoardValidityState>(getBoardValidityState(gameState));
+  const [activeCell, setActiveCell] = useAtom(activeCellAtom);
 
   function updateCellValue([rowId, colId]: Coordinates, value: number | null) {
     setGameState(
@@ -25,10 +28,45 @@ export function useGame(sudoku: typeof sudokus.$inferSelect) {
     setBoardValidityState(getBoardValidityState(gameState));
   }, [gameState]);
 
+  function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    if (!e.key.includes("Arrow") || !activeCell) return;
+
+    e.preventDefault();
+
+    switch (e.key) {
+      case "ArrowUp":
+        if (activeCell[0] === 0) {
+          break;
+        }
+        setActiveCell([activeCell[0] - 1, activeCell[1]]);
+        break;
+      case "ArrowDown":
+        if (activeCell[0] === 8) {
+          break;
+        }
+        setActiveCell([activeCell[0] + 1, activeCell[1]]);
+        break;
+      case "ArrowLeft":
+        if (activeCell[1] === 0) {
+          break;
+        }
+        setActiveCell([activeCell[0], activeCell[1] - 1]);
+        break;
+      case "ArrowRight":
+        if (activeCell[1] === 8) {
+          break;
+        }
+        setActiveCell([activeCell[0], activeCell[1] + 1]);
+        break;
+    }
+  }
+
   return {
     gameState,
+    activeCell,
     boardValidityState,
     setGameState,
     updateCellValue,
+    handleKeyDown,
   };
 }

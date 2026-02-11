@@ -9,7 +9,7 @@ import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
 export type CellProps = {
   value: number | null;
   coordinates: Coordinates;
-  valueChangeAction: (location: Coordinates, value: number | null) => void;
+  valueChangeAction?: (location: Coordinates, value: number | null) => void;
   isStatic?: boolean;
   preview?: boolean;
   isValid?: boolean;
@@ -18,7 +18,7 @@ export type CellProps = {
 
 export function Cell({
   value,
-  valueChangeAction: changeValue,
+  valueChangeAction,
   coordinates,
   isStatic = false,
   preview = false,
@@ -55,11 +55,11 @@ export function Cell({
   }, [activeCell]);
 
   const handleChange: KeyboardEventHandler<HTMLDivElement> = (e) => {
-    if (isStatic) return;
+    if (isStatic || !valueChangeAction) return;
 
     switch (e.key) {
       case "Backspace":
-        changeValue(coordinates, null);
+        valueChangeAction(coordinates, null);
 
       default:
         const num = parseInt(e.key);
@@ -70,7 +70,7 @@ export function Cell({
 
         // implicitly excludes NaN, because NaN fails all comparisons
         if (num >= 1 && num <= 9) {
-          changeValue(coordinates, num);
+          valueChangeAction(coordinates, num);
         }
     }
   };

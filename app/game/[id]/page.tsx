@@ -18,11 +18,9 @@ export default async function Game({
   }
 
   return (
-    <div>
-      <main className="min-h-screen py-32 px-14">
-        <h1 className="text-3xl my-4">{sudoku.id}</h1>
-        <GameClient sudoku={sudoku} />
-      </main>
-    </div>
+    <main className="min-h-screen py-32 px-14 @container max-w-4xl mx-auto">
+      <h1 className="text-3xl my-4">{sudoku.id}</h1>
+      <GameClient sudoku={sudoku} />
+    </main>
   );
 }

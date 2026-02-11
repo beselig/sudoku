@@ -2,28 +2,36 @@
 
 import { useGame } from "@/hooks/useGame";
 import { sudokus } from "@/lib/schema";
-import { Board } from "./Board";
+import { SudokuCellList } from "./SudokuCellList";
+import { SudokuGrid } from "./SudokuGrid";
 
 export function GameClient({
   sudoku,
 }: {
   sudoku: typeof sudokus.$inferSelect;
 }) {
-  const { gameState, boardValidityState, updateCellValue } = useGame(sudoku);
+  const {
+    gameState,
+    boardValidityState,
+    updateCellValue,
+    handleKeyDown,
+    activeCell,
+  } = useGame(sudoku);
 
   // useEffect(() => {
   //   registerServiceWorker();
   // }, []);
 
   return (
-    <>
-      <Board
+    <SudokuGrid onKeyDown={handleKeyDown} className="min-w-sm">
+      <SudokuCellList
         puzzle={sudoku.puzzle}
-        gameState={gameState}
+        grid={gameState}
         boardValidityState={boardValidityState}
+        activeCell={activeCell}
         cellUpdateAction={updateCellValue}
       />
-    </>
+    </SudokuGrid>
   );
 }
 
