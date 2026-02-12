@@ -3,6 +3,7 @@
 import { activeCellAtom, currentActiveValueAtom } from "@/shared/atoms";
 import { Coordinates } from "@/shared/types";
 import { cn } from "@/shared/utilts";
+import { cva } from "class-variance-authority";
 import { useSetAtom } from "jotai";
 import { useAtom } from "jotai";
 import { KeyboardEventHandler, useEffect, useRef, useState } from "react";
@@ -70,18 +71,14 @@ export function SudokuCell({
 
   return (
     <div
-      className={cn(
-        "size-full text-white relative grid content-stretch bg-black border border-white/30",
-        !value || isValid || "bg-red-500",
-        isStatic && "border-white/10",
-        preview
-          ? "pointer-events-none"
-          : currentActiveValue && currentActiveValue === value
-            ? "bg-emerald-900"
-            : null,
-        (rowId === 2 || rowId === 5) && "border-b-white",
-        (colId === 2 || colId === 5) && "border-r-white",
-      )}
+      className={variants({
+        boxEdgeBottom: !!(rowId === 2 || rowId === 5),
+        boxEdgeRight: !!(colId === 2 || colId === 5),
+        preview,
+        valid: !value || isValid,
+        highlighted: !!(currentActiveValue && currentActiveValue === value),
+        intent: isStatic ? "static" : "editable",
+      })}
     >
       <div
         ref={el}
@@ -105,3 +102,30 @@ export function SudokuCell({
     </div>
   );
 }
+
+const variants = cva(
+  ["size-full text-white relative grid content-stretch border bg-black"],
+  {
+    variants: {
+      intent: {
+        editable: "border-white/30",
+        static: "border-white/10",
+      },
+      preview: { true: "pointer-events-none" },
+      highlighted: {
+        true: "bg-emerald-900",
+      },
+      valid: { false: "bg-red-500" },
+      boxEdgeRight: { true: "border-r-white" },
+      boxEdgeBottom: { true: "border-b-white" },
+    },
+    compoundVariants: [
+      { highlighted: true, valid: false, class: "bg-emerald-900" },
+    ],
+    defaultVariants: {
+      intent: "editable",
+      preview: false,
+      valid: true,
+    },
+  },
+);
