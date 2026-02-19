@@ -1,8 +1,6 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { sudokus } from "@/lib/schema";
-import { eq } from "drizzle-orm";
+import { prisma } from "@/lib/db";
 
 export async function fetchSudokus({
   offset = 0,
@@ -12,12 +10,12 @@ export async function fetchSudokus({
   limit?: number;
 }) {
   // return await db.select().from(sudokus).offset(offset).limit(limit);
-  return await db.query.sudokus.findMany({
-    offset,
-    limit,
+  return await prisma.sudokus.findMany({
+    skip: offset,
+    take: limit,
   });
 }
 
 export async function fetchSudoku(id: string) {
-  return await db.query.sudokus.findFirst({ where: eq(sudokus.id, id) });
+  return await prisma.sudokus.findFirst({ where: { id } });
 }

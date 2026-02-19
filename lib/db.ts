@@ -1,10 +1,8 @@
-import { drizzle } from "drizzle-orm/node-postgres";
-import * as schema from "./schema";
+import { PrismaClient } from "../generated/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-export const db = drizzle(
-  `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`,
-  {
-    schema,
-    casing: "snake_case",
-  },
-);
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL!,
+});
+export const prisma = new PrismaClient({ adapter });
+
