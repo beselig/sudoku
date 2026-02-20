@@ -19,3 +19,10 @@ export async function fetchSudokus({
 export async function fetchSudoku(id: string) {
   return await prisma.sudokus.findFirst({ where: { id } });
 }
+
+export async function fetchUser(userId: string) {
+  return await prisma.users.findUnique({
+    where: { id: userId },
+    include: { games: true },
+  });
+}

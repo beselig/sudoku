@@ -18,7 +18,7 @@ export default async function Game({
   }
 
   return (
-    <main className="min-h-screen py-32 px-14 @container max-w-4xl mx-auto">
+    <main className="min-h-screen py-32 px-14 max-w-4xl mx-auto">
       <h1 className="text-3xl my-4">{sudoku.id}</h1>
       <SudokuGameClient sudoku={sudoku} />
     </main>
