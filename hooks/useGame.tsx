@@ -1,12 +1,12 @@
 import { sudokus } from "@/lib/schema";
 import { activeCellAtom } from "@/shared/atoms";
-import { GameState, Coordinates, BoardValidityState } from "@/shared/types";
+import { Puzzle, Coordinates, BoardValidityState } from "@/shared/types";
 import { getBoardValidityState } from "@/shared/validate";
 import { useAtom } from "jotai";
 import { KeyboardEvent, useEffect, useState } from "react";
 
-export function useGame(sudoku: typeof sudokus.$inferSelect) {
-  const [gameState, setGameState] = useState<GameState>(sudoku.puzzle);
+export function useGame(sudoku: SudokusSelect) {
+  const [gameState, setGameState] = useState<Puzzle>(sudoku.puzzle);
   const [boardValidityState, setBoardValidityState] =
     useState<BoardValidityState>(getBoardValidityState(gameState));
   const [activeCell, setActiveCell] = useAtom(activeCellAtom);

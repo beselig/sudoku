@@ -1,6 +1,6 @@
-import { GameState, BoardValidityState, Coordinates } from "./types";
+import { Puzzle, BoardValidityState, Coordinates } from "./types";
 
-export function getBoardValidityState(state: GameState) {
+export function getBoardValidityState(state: Puzzle) {
   const invalidFields: Coordinates[] = [];
 
   for (let rowIndex = 0; rowIndex < 9; rowIndex++) {
@@ -38,7 +38,7 @@ export function getBoardValidityState(state: GameState) {
   return invalidFields;
 }
 
-function validateRow(index: number, state: GameState, cellValue: number) {
+function validateRow(index: number, state: Puzzle, cellValue: number) {
   let matches = 0;
   for (let col = 0; col < 9; col++) {
     if (state[index][col] === cellValue) {
@@ -49,7 +49,7 @@ function validateRow(index: number, state: GameState, cellValue: number) {
   // console.log(cellValue, matches, "\n ============ ");
   return matches === 1;
 }
-function validateCol(index: number, state: GameState, cellValue: number) {
+function validateCol(index: number, state: Puzzle, cellValue: number) {
   let matches = 0;
   for (let row = 0; row < 9; row++) {
     if (state[row][index] === cellValue) {
@@ -62,7 +62,7 @@ function validateCol(index: number, state: GameState, cellValue: number) {
 
 const validateCellAgainstBox = (
   [rowId, colId]: Coordinates,
-  state: GameState,
+  state: Puzzle,
   value: number,
 ) => {
   const [boxRowId, boxColId] = getBoxCoordinates(rowId, colId);

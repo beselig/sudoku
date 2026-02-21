@@ -1,15 +1,17 @@
-import { sudokus } from "@/lib/schema";
+"use client";
+import { Puzzle } from "@/shared/types";
+import { SudokuContainer } from "./SudokuContainer";
 import { SudokuGrid } from "./SudokuGrid";
-import { SudokuCellList } from "./SudokuCellList";
+import { sudokus } from "@/generated/prisma/client";
 
-export function SudokuPreview({
-  sudoku,
-}: {
-  sudoku: typeof sudokus.$inferSelect;
-}) {
+export function SudokuPreview({ sudoku }: { sudoku: sudokus }) {
   return (
-    <SudokuGrid className="pointer-events-none">
-      <SudokuCellList grid={sudoku.puzzle} puzzle={sudoku.puzzle} preview />
-    </SudokuGrid>
+    <SudokuContainer className="pointer-events-none">
+      <SudokuGrid
+        grid={sudoku.puzzle as Puzzle}
+        puzzle={sudoku.puzzle as Puzzle}
+        preview
+      />
+    </SudokuContainer>
   );
 }

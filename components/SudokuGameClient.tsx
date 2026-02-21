@@ -1,12 +1,13 @@
 "use client";
 
 import { useGame } from "@/hooks/useGame";
-import { sudokus } from "@/lib/schema";
-import { SudokuCellList } from "./SudokuCellList";
 import { SudokuGrid } from "./SudokuGrid";
+import { SudokuContainer } from "./SudokuContainer";
+import { Puzzle } from "@/shared/types";
+import { Sudoku } from "@/generated/prisma/client";
 
 export type SudokuGameClientProps = {
-  sudoku: typeof sudokus.$inferSelect;
+  sudoku: Sudoku;
 };
 
 export function SudokuGameClient({ sudoku }: SudokuGameClientProps) {
@@ -23,15 +24,15 @@ export function SudokuGameClient({ sudoku }: SudokuGameClientProps) {
   // }, []);
 
   return (
-    <SudokuGrid onKeyDown={handleKeyDown} className="min-w-sm">
-      <SudokuCellList
-        puzzle={sudoku.puzzle}
+    <SudokuContainer onKeyDown={handleKeyDown} className="min-w-sm">
+      <SudokuGrid
+        puzzle={sudoku.puzzle as Puzzle}
         grid={gameState}
         boardValidityState={boardValidityState}
         activeCell={activeCell}
         cellUpdateAction={updateCellValue}
       />
-    </SudokuGrid>
+    </SudokuContainer>
   );
 }
 

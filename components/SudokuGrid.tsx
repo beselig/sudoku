@@ -1,20 +1,35 @@
-import { cn } from "@/shared/utilts";
-import { PropsWithChildren, DOMAttributes } from "react";
+import { Puzzle, Coordinates, BoardValidityState } from "@/shared/types";
+import { SudokuCell } from "./SudokuCell";
+
+export type SudokuGridProps = {
+  puzzle: Puzzle;
+  grid: Puzzle;
+  cellUpdateAction?: (location: Coordinates, value: number | null) => void;
+  activeCell?: Coordinates | null;
+  preview?: boolean;
+  boardValidityState?: BoardValidityState;
+};
 
 export function SudokuGrid({
-  children,
-  className,
-  ...props
-}: PropsWithChildren<{ className?: string }> & DOMAttributes<HTMLDivElement>) {
-  return (
-    <div
-      {...props}
-      className={cn(
-        className,
-        "grid grid-cols-9 grid-rows-9 aspect-square w-full items gap-px p-px border border-white bg-gray-500 @container",
-      )}
-    >
-      {children}
-    </div>
+  grid,
+  puzzle,
+  cellUpdateAction,
+  activeCell,
+  boardValidityState,
+  preview = false,
+}: SudokuGridProps) {
+  return grid.map((row, rowId) =>
+    row.map((col, colId) => (
+      <SudokuCell
+        key={`${rowId}-${colId}`}
+        value={col}
+        coordinates={[rowId, colId]}
+        valueChangeAction={cellUpdateAction}
+        isStatic={!!puzzle[rowId][colId]}
+        preview={preview}
+        isValid={boardValidityState?.[rowId][colId] ?? true}
+        isActive={activeCell?.[0] === rowId && activeCell?.[1] === colId}
+      />
+    )),
   );
 }

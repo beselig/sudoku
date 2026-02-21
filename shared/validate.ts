@@ -1,7 +1,7 @@
-import { Coordinates, GameState, BoardValidityState } from "./types";
+import { Coordinates, Puzzle, BoardValidityState } from "./types";
 
 // validates Cell, null values are considered invalid
-export function getBoardValidityState(state?: GameState | null) {
+export function getBoardValidityState(state?: Puzzle | null) {
   const validGrid: BoardValidityState = Array.from({ length: 9 }, () =>
     Array(9).fill(true),
   );
@@ -45,7 +45,7 @@ export function getBoardValidityState(state?: GameState | null) {
   return validGrid;
 }
 
-function validateRow(index: number, state: GameState, cellValue: number) {
+function validateRow(index: number, state: Puzzle, cellValue: number) {
   let matches = 0;
   for (let col = 0; col < 9; col++) {
     if (state[index][col] === cellValue) {
@@ -56,7 +56,7 @@ function validateRow(index: number, state: GameState, cellValue: number) {
   // console.log(cellValue, matches, "\n ============ ");
   return matches === 1;
 }
-function validateCol(index: number, state: GameState, cellValue: number) {
+function validateCol(index: number, state: Puzzle, cellValue: number) {
   let matches = 0;
   for (let row = 0; row < 9; row++) {
     if (state[row][index] === cellValue) {
@@ -69,7 +69,7 @@ function validateCol(index: number, state: GameState, cellValue: number) {
 
 const validateCellAgainstBox = (
   [rowId, colId]: Coordinates,
-  state: GameState,
+  state: Puzzle,
   value: number,
 ) => {
   const [boxRowId, boxColId] = getBoxCoordinates(rowId, colId);
