@@ -9,7 +9,7 @@ export default async function Home() {
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full flex-col py-32 px-16 bg-white dark:bg-black sm:items-start">
         <h1 className="text-3xl font-bold mb-3 mt-2">Puzzles</h1>
-        <div className="grid grid-cols-3 gap-4 size-full">
+        <div className="grid grid-cols-4 gap-4 size-full">
           {sudokus.map((sudoku) => (
             <div key={sudoku.id} className="w-full">
               <Link href={`/game/${sudoku.id}`}>
