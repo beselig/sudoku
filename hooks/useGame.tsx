@@ -5,14 +5,16 @@ import { getBoardValidityState } from "@/shared/validate";
 import { useAtom } from "jotai";
 import { KeyboardEvent, useEffect, useState } from "react";
 
+export type GameStateHistory = {
+    coordinates: Coordinates;
+    previous: number | null;
+    next: number | null;
+}[];
+
 export function useGame(sudoku: Sudoku) {
-    const [gameStateHistory, setGameStateHistory] = useState<
-        {
-            coordinates: Coordinates;
-            previous: number | null;
-            next: number | null;
-        }[]
-    >([]);
+    const [gameStateHistory, setGameStateHistory] = useState<GameStateHistory>(
+        [],
+    );
     const [gameState, setGameState] = useState<Puzzle>(sudoku.puzzle as Puzzle);
     const [boardValidityState, setBoardValidityState] =
         useState<BoardValidityState>(getBoardValidityState(gameState));
